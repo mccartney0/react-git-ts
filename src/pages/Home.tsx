@@ -1,14 +1,19 @@
-import { MouseEvent } from 'react';
+import { useState, MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from "../components/layout/Layout";
 
 const Home = () => {
 
+  const [username, setUser] = useState('');
+
   const navigate = useNavigate();
 
   const handleClick = async (event: MouseEvent) => {
     event.preventDefault();
-    navigate('/profile');
+    if(username.length === 0) {
+      return alert('Please, enter your github\'s username.')
+    }
+    navigate(`/${username}`);
   }
 
     return (
@@ -21,7 +26,15 @@ const Home = () => {
                   Github's username
                 </label>
 
-                <input className="form-control" id="gitUser" aria-describedby="userHelp"/>
+                <input
+                  className="form-control"
+                  type="text"
+                  aria-label="Username"
+                  id="gitUser"
+                  aria-describedby="userHelp"
+                  value={username}
+                  onChange={event => setUser(event.target.value)}
+                />
 
                 <div id="userHelp" className="form-text">
                   Enter your github's username.
@@ -29,7 +42,13 @@ const Home = () => {
               </div>
 
               <div>
-                <button onClick={handleClick} type="submit" className="btn btn-primary">Submit</button>
+                <button
+                  onClick={handleClick}
+                  type="submit"
+                  className="btn btn-primary"
+                >
+                  Submit
+                </button>
               </div>
           </div>
         </Layout>
