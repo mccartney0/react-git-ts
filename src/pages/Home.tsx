@@ -1,10 +1,12 @@
 import { useState, MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from "../components/layout/Layout";
+import gitApi from '../api/github';
 
 const Home = () => {
 
   const [username, setUser] = useState('');
+  const [invalid, setInvalid] = useState(false);
 
   const navigate = useNavigate();
 
@@ -13,7 +15,13 @@ const Home = () => {
     if(username.length === 0) {
       return alert('Please, enter your github\'s username.')
     }
-    navigate(`/${username}`);
+
+    gitApi.getUsername(username)
+      .then(response => navigate(`/${response.login}`))
+      .catch(() => {
+        navigate('/')
+        setInvalid(true);
+      })
   }
 
     return (
@@ -39,6 +47,13 @@ const Home = () => {
                 <div id="userHelp" className="form-text">
                   Enter your github's username.
                 </div>
+
+                {
+                  invalid && 
+                    <div id="invalidUser" className="text-danger">
+                      Invalid username!
+                    </div>
+                }
               </div>
 
               <div>
